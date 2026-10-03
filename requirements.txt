@@ -1,0 +1,10 @@
+openai>=1.40.0
+pydantic>=2.8.0
+fastapi>=0.112.0
+uvicorn>=0.30.0
+streamlit>=1.37.0
+pandas>=2.2.0
+opentelemetry-api>=1.26.0
+opentelemetry-sdk>=1.26.0
+python-dotenv>=1.0.1
+pytest>=8.3.0
