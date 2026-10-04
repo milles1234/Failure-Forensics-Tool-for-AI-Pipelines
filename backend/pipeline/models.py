@@ -24,20 +24,20 @@ class ExtractedEntities(BaseModel):
 
     amounts: List[str] = Field(default_factory=list, description="Monetary values")
     key_terms: List[str] = Field(default_factory=list, description="Important legal or business terms")
-    confidence_score:int = Field(ge=1, le=5, description="Model's confidence in extraction (1-5)")
+    confidence_score:int = Field(ge=1, le=5, description="Confidence score (1-5) on how accurately and completely entities were extracted from the text.")
 
 
 class ClassificatioOutput(BaseModel):
     doc_type: DocumentType
     reasoning: str
-    confidence_score: int = Field(ge=1, le=5)
+    confidence_score: int = Field(ge=1, le=5, description="Confidence score (1-5) on how unambiguously the document fits into the selected classification.")
 
 
 
 class SummarizationOutput(BaseModel):
     summary: str
     key_takeways: List[str]
-    confidence_score: int = Field(ge=1, le=5)
+    confidence_score: int = Field(ge=1, le=5, description="Confidence score (1-5) on how well the summary captures the essential details without losing context.")
 
 
 

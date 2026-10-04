@@ -1,8 +1,10 @@
+from backend.tracing.decorator import trace_step
 import openai
 from models import IntakeOutput, ExtractedEntities, ClassificationOutput
 
 client = openai.Client()
 
+@trace_step("Classification")
 def step_3_classification(intake: IntakeOutput, entities: ExtractedEntities) -> ClassificationOutput:
     """Classifies the document based on text and extracted entities."""
     response = client.beta.chat.completions.parse(

@@ -1,7 +1,10 @@
+from backend.tracing.decorator import trace_step
 import openai
 from models import IntakeOutput, ClassificationOutput, SummarizationOutput
 
 client = openai.Client()
+
+@trace_step("Summarization")
 
 def step_4_summarization(intake: IntakeOutput, classification: ClassificationOutput) -> SummarizationOutput:
     """Summarizes based on the document type."""
