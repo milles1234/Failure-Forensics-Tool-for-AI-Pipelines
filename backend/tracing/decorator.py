@@ -7,10 +7,12 @@ from functools import wraps
 from collections.abc import Callable
 import time
 
-
+from opentelemetry import trace as otel_trace
 from schemas import Span, Trace
 
 
+
+tracer = otel_trace.get_tracer("ai.pipeline.trace")
 active_trace = None
 
 
@@ -24,22 +26,27 @@ def trace_step(step_name: str):
             if active_trace is None:
                 return func(*args, **kwargs)
             
+            # Opentelemtry Span context
+            with tracer.start_as_current_span(step_name) as otel_span:
+                span_id = str(uuid.uuid4())
+                start_time = datetime.utcnow()
+                start_perf = time.time()
 
-
-            # start the span and capture inputs and confidence score
-            span = Span(
-                span_id=str(uuid.uuid4()),
-                step_name=step_name,
-                start_time=datetime.utcnow(),
-                
+            
                 #convert inputs to dict assumes Pydantiv models for inputs
-                input_data={"args":[a.model_dump() if hasattr(a, 'model_dump') else str(a) for a in args]},
+                input_payload={"args":[a.model_dump() if hasattr(a, 'model_dump') else str(a) for a in args]},
+                otel_span.set_attribute("pipeline.step.name", step_name)
                 
+                span = Span(
+                    span_id=span_id,
+                    step_name=step_name,
+                    start_time=start_time,
+                    input_data=input_payload
+                )
 
+          
 
-            )   
-
-            start_time = time.time()
+          
             try:
                 #execute the actual pipeline step
                 result = func(*args,**kwargs)
