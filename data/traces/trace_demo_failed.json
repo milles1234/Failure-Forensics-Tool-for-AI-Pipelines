@@ -1,0 +1,126 @@
+{
+    "trace_id": "trace-demo-failed-001",
+    "start_time": "2026-10-29T10:00:00.000000",
+    "end_time": "2026-10-29T10:00:04.821000",
+    "total_latency_ms": 4821.0,
+    "status": "failed",
+    "confidence_score": 2,
+    "final_output": {
+        "summary": "Contract agreement between UNKNOWN PARTY and REDACTED for an unspecified amount.",
+        "key_takeways": ["Unverified parties", "Missing dates", "Incomplete terms"]
+    },
+    "spans": [
+        {
+            "span_id": "span-001-intake",
+            "step_name": "step_1_intake",
+            "start_time": "2026-10-29T10:00:00.000000",
+            "end_time": "2026-10-29T10:00:00.312000",
+            "latency_ms": 312.0,
+            "input_data": {
+                "raw_text": "SERVICE AGREEMENT\n\nThis agreement is entered into as of January 15, 2026 between Acme Corporation (\"Service Provider\") and GlobalTech Ltd (\"Client\").\n\nThe Service Provider agrees to deliver cloud infrastructure services for a total contract value of $250,000 USD, payable in quarterly installments of $62,500.\n\nTerms include a 12-month service period, 99.9% uptime SLA, and dedicated support staff."
+            },
+            "output_data": {
+                "document_id": "doc-2026-001",
+                "raw_text": "SERVICE AGREEMENT\n\nThis agreement is entered into as of January 15, 2026 between Acme Corporation (\"Service Provider\") and GlobalTech Ltd (\"Client\").\n\nThe Service Provider agrees to deliver cloud infrastructure services for a total contract value of $250,000 USD, payable in quarterly installments of $62,500.\n\nTerms include a 12-month service period, 99.9% uptime SLA, and dedicated support staff.",
+                "metadata": {
+                    "source": "upload",
+                    "page_count": 1,
+                    "char_count": 487
+                }
+            },
+            "confidence_score": 5,
+            "error": null,
+            "prompt_tokens": null,
+            "completion_tokens": null
+        },
+        {
+            "span_id": "span-002-extraction",
+            "step_name": "step_2_extraction",
+            "start_time": "2026-10-29T10:00:00.315000",
+            "end_time": "2026-10-29T10:00:01.892000",
+            "latency_ms": 1577.0,
+            "input_data": {
+                "document_id": "doc-2026-001",
+                "raw_text": "SERVICE AGREEMENT..."
+            },
+            "output_data": {
+                "names": ["Unnamed Party A", "Unnamed Party B"],
+                "dates": [],
+                "amounts": ["$0 USD"],
+                "key_terms": ["agreement", "services"],
+                "confidence_score": 2
+            },
+            "confidence_score": 2,
+            "error": null,
+            "prompt_tokens": 612,
+            "completion_tokens": 87,
+            "judgment": {
+                "is_reasonable_transformation": false,
+                "quality_score": 1,
+                "failure_type": "Extraction Hallucination",
+                "reasoning": "The LLM failed to extract the explicitly named parties 'Acme Corporation' and 'GlobalTech Ltd', substituting them with generic placeholders. The $250,000 contract value was also lost. This is a clear extraction hallucination where the model ignored grounded entities in the source text."
+            }
+        },
+        {
+            "span_id": "span-003-classification",
+            "step_name": "step_3_classification",
+            "start_time": "2026-10-29T10:00:01.895000",
+            "end_time": "2026-10-29T10:00:03.102000",
+            "latency_ms": 1207.0,
+            "input_data": {
+                "names": ["Unnamed Party A", "Unnamed Party B"],
+                "dates": [],
+                "amounts": ["$0 USD"],
+                "key_terms": ["agreement", "services"]
+            },
+            "output_data": {
+                "doc_type": "unknown",
+                "reasoning": "Insufficient entity data to classify document type. Missing party names and dates prevent confident classification.",
+                "confidence_score": 2
+            },
+            "confidence_score": 2,
+            "error": null,
+            "prompt_tokens": 423,
+            "completion_tokens": 64
+        },
+        {
+            "span_id": "span-004-summarization",
+            "step_name": "step_4_summarization",
+            "start_time": "2026-10-29T10:00:03.105000",
+            "end_time": "2026-10-29T10:00:04.821000",
+            "latency_ms": 1716.0,
+            "input_data": {
+                "doc_type": "unknown",
+                "reasoning": "Insufficient entity data",
+                "confidence_score": 2
+            },
+            "output_data": {
+                "summary": "Contract agreement between UNKNOWN PARTY and REDACTED for an unspecified amount.",
+                "key_takeways": ["Unverified parties", "Missing dates", "Incomplete terms"],
+                "confidence_score": 2
+            },
+            "confidence_score": 2,
+            "error": null,
+            "prompt_tokens": 389,
+            "completion_tokens": 52
+        }
+    ],
+    "root_cause_analysis": {
+        "root_cause_step": "step_2_extraction",
+        "failure_category": "Extraction Hallucination",
+        "explanation": "The LLM failed to extract the explicitly named parties 'Acme Corporation' and 'GlobalTech Ltd', substituting them with generic placeholders. The $250,000 contract value was also lost.",
+        "suspect_spans": [
+            {
+                "step_name": "step_2_extraction",
+                "span_id": "span-002-extraction",
+                "confidence_score": 2,
+                "judgment": {
+                    "is_reasonable_transformation": false,
+                    "quality_score": 1,
+                    "failure_type": "Extraction Hallucination",
+                    "reasoning": "Named entities present in source were not extracted."
+                }
+            }
+        ]
+    }
+}

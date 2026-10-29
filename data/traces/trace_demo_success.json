@@ -1,0 +1,102 @@
+{
+    "trace_id": "trace-demo-success-002",
+    "start_time": "2026-10-29T09:00:00.000000",
+    "end_time": "2026-10-29T09:00:05.210000",
+    "total_latency_ms": 5210.0,
+    "status": "success",
+    "confidence_score": 5,
+    "final_output": {
+        "summary": "A 12-month cloud infrastructure services agreement between Acme Corporation and GlobalTech Ltd valued at $250,000 USD with 99.9% uptime SLA.",
+        "key_takeways": [
+            "Contract value: $250,000 USD",
+            "Quarterly payments of $62,500",
+            "12-month service period",
+            "99.9% uptime SLA guarantee"
+        ]
+    },
+    "spans": [
+        {
+            "span_id": "span-s1-intake",
+            "step_name": "step_1_intake",
+            "start_time": "2026-10-29T09:00:00.000000",
+            "end_time": "2026-10-29T09:00:00.298000",
+            "latency_ms": 298.0,
+            "input_data": {
+                "raw_text": "SERVICE AGREEMENT between Acme Corporation and GlobalTech Ltd for $250,000 cloud services."
+            },
+            "output_data": {
+                "document_id": "doc-2026-002",
+                "raw_text": "SERVICE AGREEMENT between Acme Corporation and GlobalTech Ltd for $250,000 cloud services.",
+                "metadata": {"source": "upload", "page_count": 1}
+            },
+            "confidence_score": 5,
+            "error": null,
+            "prompt_tokens": null,
+            "completion_tokens": null
+        },
+        {
+            "span_id": "span-s2-extraction",
+            "step_name": "step_2_extraction",
+            "start_time": "2026-10-29T09:00:00.301000",
+            "end_time": "2026-10-29T09:00:01.876000",
+            "latency_ms": 1575.0,
+            "input_data": {
+                "document_id": "doc-2026-002",
+                "raw_text": "SERVICE AGREEMENT between Acme Corporation and GlobalTech Ltd for $250,000 cloud services."
+            },
+            "output_data": {
+                "names": ["Acme Corporation", "GlobalTech Ltd"],
+                "dates": ["January 15, 2026"],
+                "amounts": ["$250,000 USD", "$62,500"],
+                "key_terms": ["cloud infrastructure services", "uptime SLA", "quarterly installments"],
+                "confidence_score": 5
+            },
+            "confidence_score": 5,
+            "error": null,
+            "prompt_tokens": 598,
+            "completion_tokens": 104
+        },
+        {
+            "span_id": "span-s3-classification",
+            "step_name": "step_3_classification",
+            "start_time": "2026-10-29T09:00:01.879000",
+            "end_time": "2026-10-29T09:00:02.991000",
+            "latency_ms": 1112.0,
+            "input_data": {
+                "names": ["Acme Corporation", "GlobalTech Ltd"],
+                "amounts": ["$250,000 USD"],
+                "key_terms": ["cloud infrastructure services"]
+            },
+            "output_data": {
+                "doc_type": "contract",
+                "reasoning": "Clear service agreement with named parties, monetary value, and defined terms. Classified as contract with high confidence.",
+                "confidence_score": 5
+            },
+            "confidence_score": 5,
+            "error": null,
+            "prompt_tokens": 412,
+            "completion_tokens": 78
+        },
+        {
+            "span_id": "span-s4-summarization",
+            "step_name": "step_4_summarization",
+            "start_time": "2026-10-29T09:00:02.994000",
+            "end_time": "2026-10-29T09:00:05.210000",
+            "latency_ms": 2216.0,
+            "input_data": {
+                "doc_type": "contract",
+                "reasoning": "Clear service agreement with named parties"
+            },
+            "output_data": {
+                "summary": "A 12-month cloud infrastructure services agreement between Acme Corporation and GlobalTech Ltd valued at $250,000 USD with 99.9% uptime SLA.",
+                "key_takeways": ["Contract value: $250,000 USD", "Quarterly payments of $62,500", "12-month service period", "99.9% uptime SLA guarantee"],
+                "confidence_score": 5
+            },
+            "confidence_score": 5,
+            "error": null,
+            "prompt_tokens": 445,
+            "completion_tokens": 96
+        }
+    ],
+    "root_cause_analysis": null
+}
